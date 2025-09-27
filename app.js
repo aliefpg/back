@@ -51,6 +51,5 @@ app.use(
   })
 );
 
-app.options("*", cors());
 app.use("/", routeNavigator);
 app.use(errorMiddleware);
