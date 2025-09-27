@@ -1,21 +1,15 @@
 // src/config/db.config.js
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
 require("dotenv").config();
-const bluebird = require("bluebird");
 
-const connection = mysql.createConnection({
+const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
-connection.connect((err) => {
-  if (err) throw err;
-  console.log("Database connected");
-});
-
-// Promisify query
-connection.query = bluebird.promisify(connection.query);
-
-module.exports = connection;
+module.exports = pool;
