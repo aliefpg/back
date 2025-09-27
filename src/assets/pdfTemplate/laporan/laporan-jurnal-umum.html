@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumen</title>
+    <style>
+        *,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            box-sizing: border-box;
+
+        }
+
+        body {
+            padding: 1.5rem;
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .label-biodata {
+            display: flex;
+            flex-direction: row;
+            flex: 1;
+            width: 100%;
+        }
+
+        .label-name {
+            flex: 0.4;
+        }
+
+        .label-separator {
+            flex: 0.1;
+            max-width: 20px;
+        }
+
+        .label-value {
+            flex: 1;
+        }
+
+        .section-biodata {
+            margin-block: 1rem;
+            display: flex;
+            width: 100%;
+            flex-direction: row;
+        }
+
+        table {
+            width: 100%;
+            border-spacing: 0;
+        }
+
+        table th,
+        td {
+            border: none;
+            /* border-bottom: 1px solid black; */
+            border-collapse: collapse;
+            padding: 1rem 0;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="display: flex; justify-content: space-between;">
+        <div>
+            <h1 style="font-size: 1.2rem;">VALUE_UNIT_NAME</h1>
+            <p style="font-size: 0.8rem;">VALUE_UNIT_ADDRESS</p>
+            <p style="font-size: 0.8rem;">VALUE_UNIT_PHONE</p>
+            <br>
+        </div>
+
+    </div>
+    <hr />
+
+    <section>
+        <br>
+
+    </section>
+    <section class="section-biodata" style="display: flex; justify-content: space-between;">
+        <div style="display: flex; flex: 1; flex-direction: column; justify-content: center;  align-items: center;">
+
+            <div class="label-biodata">
+                <p class="label-name">UNIT SEKOLAH</p>
+                <p class="label-separator">:</p>
+                <p class="label-value">VALUE_UNIT</p>
+            </div>
+        </div>
+
+    </section>
+    <section class="section-biodata" style="display: flex; justify-content: space-between;">
+        <div style="display: flex; flex: 1; flex-direction: column; justify-content: center;  align-items: center;">
+            <p style="text-align: center; font-weight: bold;">VALUE_TITLE_DOKUMEN</p>
+            <p style="text-align: center;" class="label-name">Tahun Ajaran <span>VALUE_TAHUN_AJARAN</span></p>
+        </div>
+
+    </section>
+
+    <hr />
+    <br />
+    <section style="display: flex; flex-direction: column;">
+        <P>Penerimaan</P>
+        <table style="border: none;">
+            <thead>
+                <th style="font-size: 12px;">AKUN</th>
+                <th style="font-size: 12px;">TANGGAL</th>
+                <th style="font-size: 12px;">KODE AKUN</th>
+                <th style="font-size: 12px;">KETERANGAN</th>
+                <th style="font-size: 12px;">DEBIT</th>
+                <th style="font-size: 12px;">KREDIT</th>
+
+            </thead>
+            <tbody>
+                VALUE_TABEL_PENERIMAAN
+            </tbody>
+        </table>
+        <div style="width: 100%; align-self: flex-end; margin-top: 1rem;background-color: lightgray;">
+            <div style="display: flex;">
+                <p style="flex: 1;"><strong>TOTAL</strong></p>
+                <p style="flex:1;"><strong>VALUE_TOTAL_DEBIT</strong></p>
+
+            </div>
+
+        </div>
+    </section>
+    <section style="display: flex; flex-direction: column;">
+        <P>Pengeluaran</P>
+        <table style="border: none;">
+            <thead>
+                <th style="font-size: 12px;">AKUN</th>
+                <th style="font-size: 12px;">TANGGAL</th>
+                <th style="font-size: 12px;">KODE AKUN</th>
+                <th style="font-size: 12px;">KETERANGAN</th>
+                <th style="font-size: 12px;">DEBIT</th>
+                <th style="font-size: 12px;">KREDIT</th>
+            </thead>
+            <tbody>
+                VALUE_TABEL_PENGELUARAN
+            </tbody>
+        </table>
+        <div style="width: 100%; align-self: flex-end; margin-top: 1rem;background-color: lightgray;">
+            <div style="display: flex;">
+                <p style="flex: 1;"><strong>TOTAL</strong></p>
+                <p style="flex:1;"><strong>VALUE_TOTAL_KREDIT</strong></p>
+
+            </div>
+
+        </div>
+    </section>
+
+    <section style="display: flex;justify-content: flex-end; width: 100%; margin-top:3rem">
+        <table style="border: none;width: 45%;">
+            <thead>
+                <th style="font-size: 12px;width:120px"></th>
+                <th style="font-size: 12px; text-align: left;">DEBIT</th>
+                <th style="font-size: 12px;text-align: left;">KREDIT</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: left; font-weight: bold; font-size: 12px">SUB TOTAL</td>
+                    <td style=" text-align: left;font-size: 11px">VALUE_SUB_TOTAL_DEBIT</td>
+                    <td style=" text-align: left;font-size: 11px">VALUE_SUB_TOTAL_CREDIT</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left; font-weight: bold; font-size: 12px"">SALDO AWAL</td>
+                    <td style=" text-align: left;font-size: 11px">VALUE_SALDO_AWAL_DEBIT</td>
+                    <td style="text-align: left;font-size: 11px">VALUE_SALDO_AWAL_CREDIT</td>
+                </tr>
+                <tr>
+                    <td style=" text-align: left;font-weight: bold; font-size: 12px"">TOTAL</td>
+                    <td style=" text-align: left;font-size: 11px">VALUE_TOTAL_AKHIR_DEBIT</td>
+                    <td style="text-align: left;font-size: 11px">VALUE_TOTAL_AKHIR_CREDIT</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;font-weight: bold; font-size: 12px"">SALDO AKHIR</td>
+                    <td style=" text-align: left;font-size: 11px">VALUE_SALDO_AKHIR_DEBIT</td>
+                    <td style="text-align: left;font-size: 11px">VALUE_SALDO_AKHIR_CREDIT</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <section style=" margin-top: 3rem; padding-inline: 2rem; display: flex; justify-content: flex-end; align-items:
+                        flex-end; flex-direction: column;">
+        <div style="flex: 1; justify-self: flex-end;">
+
+            <p>VALUE_UNIT_KOTA, VALUE_TANGGAL_DOKUMEN</p>
+            <p>VALUE_UNIT_PERSON</p>
+            <p style="margin-top: 3rem">
+              <strong>VALUE_UNIT_PERSON_NAME</strong>
+            </p>
+            <p>NIP. VALUE_UNIT_PERSON_NIP</p>
+        </div>
+    </section>
+</body>
+
+</html>

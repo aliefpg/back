@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dokumen</title>
+    <style>
+      *,
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+      }
+
+      body {
+        padding: 1.5rem;
+      }
+
+      .title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+      }
+
+      .label-biodata {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        width: 100%;
+      }
+
+      .label-name {
+        flex: 0.4;
+      }
+
+      .label-separator {
+        flex: 0.1;
+        max-width: 20px;
+      }
+
+      .label-value {
+        flex: 1;
+      }
+
+      .section-biodata {
+        margin-block: 1rem;
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+      }
+
+      table {
+        width: 100%;
+        border-spacing: 0;
+      }
+
+      table th,
+      td {
+        border-bottom: 1px solid black;
+        border-collapse: collapse;
+        padding: 1rem 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div style="display: flex; justify-content: space-between">
+      <div>
+        <h1 style="font-size: 1.2rem">VALUE_UNIT_NAME</h1>
+        <p style="font-size: 0.8rem">VALUE_UNIT_ADDRESS</p>
+        <p style="font-size: 0.8rem">VALUE_UNIT_PHONE</p>
+        <br />
+      </div>
+      <div>
+        <h2>Bukti Pembayaran</h2>
+        <h3 style="font-weight: 300; font-size: 0.8rem">VALUE_NO_REFERENSI</h3>
+      </div>
+    </div>
+    <hr />
+
+    <section>
+      <br />
+    </section>
+    <section
+      class="section-biodata"
+      style="display: flex; justify-content: space-between"
+    >
+      <div style="display: flex; flex: 1; flex-direction: column">
+        <div class="label-biodata">
+          <p class="label-name">NIS</p>
+          <p class="label-separator">:</p>
+          <p class="label-value">VALUE_NIS_SISWA</p>
+        </div>
+        <div class="label-biodata">
+          <p class="label-name">NAMA</p>
+          <p class="label-separator">:</p>
+          <p class="label-value">VALUE_NAMA_SISWA</p>
+        </div>
+        <div class="label-biodata">
+          <p class="label-name">KELAS</p>
+          <p class="label-separator">:</p>
+          <p class="label-value">VALUE_KELAS_SISWA</p>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; flex: 1">
+        <div class="label-biodata">
+          <p class="label-name">TANGGAL PEMBAYARAN</p>
+          <p class="label-separator">:</p>
+          <p class="label-value">VALUE_TANGGAL_SISWA</p>
+        </div>
+        <div class="label-biodata">
+          <p class="label-name">TAHUN AJARAN</p>
+          <p class="label-separator">:</p>
+          <p class="label-value">VALUE_TAHUN_AJARAN</p>
+        </div>
+        <div class="label-biodata">
+          <p class="label-name">AKUN KAS</p>
+          <p class="label-separator">:</p>
+          <p class="label-value">VALUE_AKUN_KAS_SISWA</p>
+        </div>
+      </div>
+    </section>
+    <hr />
+    <br />
+    <p style="font-size: 1.2rem"><strong> Rincian Sebagai Berikut :</strong></p>
+    <section style="display: flex; flex-direction: column">
+      <table>
+        <thead>
+          <th>NO.</th>
+          <th>NAMA PEMBAYARAN</th>
+          <th>TOTAL TAGIHAN</th>
+          <th>NOMINAL</th>
+          <th>SISA</th>
+        </thead>
+        <tbody>
+          VALUE_TABEL_PEMBAYARAN
+        </tbody>
+      </table>
+      <div
+        style="
+          width: 50%;
+          align-self: flex-end;
+          margin-top: 1rem;
+          background-color: grey;
+        "
+      >
+        <div style="display: flex">
+          <p style="flex: 1"><strong>TOTAL PEMBAYARAN</strong></p>
+          <br />
+          <p style="flex: 1"><strong>VALUE_TOTAL_PEMBAYARAN</strong></p>
+        </div>
+        <div style="display: flex">
+          <p style="flex: 1"><strong>TERBILANG</strong></p>
+          <p style="flex: 1"><strong>VALUE_TERBILANG</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <section
+      style="
+        margin-top: 3rem;
+        padding-left: 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      "
+    >
+      <div style="display: flex; flex-direction: column; align-self: flex-end">
+        <p>VALUE_UNIT_KOTA, VALUE_TANGGAL_DOKUMEN</p>
+        <p>VALUE_UNIT_PERSON</p>
+        <p style="margin-top: 3rem">
+          <strong>VALUE_UNIT_PERSON_NAME</strong>
+        </p>
+        <p>NIP. VALUE_UNIT_PERSON_NIP</p>
+      </div>
+    </section>
+  </body>
+</html>

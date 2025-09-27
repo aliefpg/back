@@ -1,0 +1,108 @@
+const axios = require("axios");
+
+const helpers =require("../helpers");
+
+const { promiseHandler } = require("../middleware/promiseHandler");
+
+const { encryptData } = require("../utils/encrypt");
+
+const waConfigModel = require("../models/waConfigModel");
+
+const billingModel = require("../models/billingModel");
+
+
+require("dotenv").config();
+
+
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+
+
+module.exports = {
+
+  postMessage: promiseHandler(async (req, res, next) => {
+    const { students, period_id } = req.body;
+
+    try {
+      const configs = await waConfigModel.getAll();
+      const configTagihan = configs.find(c => c.notification_type === 'KIRIM_TAGIHAN');
+      const configRange = configs.find(c => c.notification_type === 'KIRIM_TAGIHAN_HISTORY_RANGE');
+      const historyRange = configRange && !isNaN(parseInt(configRange.value, 10)) ? parseInt(configRange.value, 10) : 12;
+
+      if (!configTagihan || !configTagihan.is_active) {
+        return helpers.response(res, 400, "Fitur notifikasi tagihan sedang tidak aktif.", {});
+      }
+      const templatePesan = configTagihan.template_message;
+
+      for (const student of students) {
+        try {
+          const encData = encryptData(student.student_id.toString());
+          const detailLink = `${process.env.REACT_URL}/tagihan?iv=${encData.iv}&encryptedData=${encData.encryptedData}`;
+          
+          const billingHistory = await billingModel.getFullBillingHistory(student.student_id, period_id, historyRange);
+
+          const riwayatText = billingHistory
+            .map((row, i) => { // Filter 'belum lunas' sudah di dalam getFullBillingHistory
+              const nomor = i + 1;
+              const tanggal = row.tanggal;
+              const status = row.status;
+              const namaPembayaran = row.nama_pembayaran;
+              const nominal = helpers.rupiahConvert(row.nominal);
+              return `${nomor}. ${tanggal}: ${status}\n   ${namaPembayaran} - ${nominal}`;
+            }).join("\n\n");
+          
+          const riwayatFinal = riwayatText.length > 0 ? riwayatText : "- Tidak ada tagihan terutang pada periode ini -";
+          const tagihanFormatted = helpers.rupiahConvert(parseInt(student.total_tagihan, 10));
+
+          let pesanFinal = templatePesan
+            .replace(/{{nama_siswa}}/g, student.student_full_name)
+            .replace(/{{nis}}/g, student.student_nis)
+            .replace(/{{kelas}}/g, student.class_class_name || '')
+            .replace(/{{link_detail}}/g, detailLink)
+            .replace(/{{total_tagihan}}/g, student.total_tagihan)
+            .replace(/{{tagihan_rupiah}}/g, tagihanFormatted)
+            .replace(/{{riwayat_tagihan}}/g, riwayatFinal);
+
+          const phoneNumber = student.student_parent_phone.startsWith("0") ? `62${student.student_parent_phone.substring(1)}` : student.student_parent_phone.replace(/\+/g, '');
+
+          // ==========================================================
+          // PERUBAHAN UNTUK WABLAS
+          // ==========================================================
+          // 1. Menyusun Body/Payload untuk Wablas
+          const messageBody = {
+            phone: phoneNumber,
+            message: pesanFinal,
+          };
+
+          console.log(`Mengirim ke ${phoneNumber} via Wablas...`);
+          console.log(pesanFinal);
+
+          // 2. Mengirim request ke API Wablas
+          await axios.post(
+            process.env.WABLAS_URL, // Menggunakan URL Wablas
+            messageBody,
+            { 
+              headers: { 
+                Authorization: process.env.WABLAS_TOKEN, // Menggunakan Token Wablas
+                'Content-Type': 'application/json'
+              } 
+            }
+          );
+          // ==========================================================
+
+          console.log(`Pesan berhasil dikirim ke ${student.student_full_name}`);
+          await delay(2000);
+
+        } catch (error) {
+          console.error(`Gagal mengirim pesan ke ${student.student_full_name}:`, error.response ? error.response.data : error.message);
+          continue;
+        }
+      }
+      return helpers.response(res, 200, "Semua pesan tagihan dalam antrian telah berhasil diproses.", {});
+    } catch (error) {
+      console.error("Error saat mengambil template atau proses kirim tagihan:", error);
+      return helpers.response(res, 500, "Terjadi kesalahan internal saat memproses permintaan.", error);
+    }
+  }),
+};
