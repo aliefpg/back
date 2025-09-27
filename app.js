@@ -1,18 +1,23 @@
-// api/index.js
 const express = require("express");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
-const routeNavigator = require("../src/routes");
-const { errorMiddleware } = require("../src/middleware/errorMiddleware");
-
+const db = require("./src/config/db.config");
+const { errorMiddleware } = require("./src/middleware/errorMiddleware");
+const routeNavigator = require("./src/routes");
+//ADD
 const app = express();
 
 app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
-app.use("/public", express.static(`${__dirname}/../public`));
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    extended: true,
+    parameterLimit: 50000,
+  })
+);
+app.use("/public", express.static(`${__dirname}/public`));
 app.use(morgan("dev"));
-
 const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
 app.use(
   cors({
@@ -30,16 +35,5 @@ app.use(
   })
 );
 
-// Routes
 app.use("/", routeNavigator);
-
-// Error handling
 app.use(errorMiddleware);
-
-// Export sebagai handler untuk Vercel
-module.exports = app;
-module.exports.config = {
-  api: {
-    bodyParser: false,
-  },
-};
