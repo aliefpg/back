@@ -43,6 +43,3 @@ app.use(
 
 app.use("/", routeNavigator);
 app.use(errorMiddleware);
-
-// EXPORT untuk Vercel
-module.exports = app;
