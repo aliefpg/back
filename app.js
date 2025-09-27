@@ -38,3 +38,5 @@ app.use(
 
 app.use("/", routeNavigator);
 app.use(errorMiddleware);
+
+module.exports = app;
