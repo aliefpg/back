@@ -1,13 +1,15 @@
-// src/middleware/errorMiddleware.js
-const helpers = require("../helpers");
-const { CustomErrorAPI } = require("../helpers/CustomError");
+const helpers = require('../helpers');
+const { CustomErrorAPI } = require('../helpers/CustomError');
+const connection = require('../config/db.config');
 
 module.exports = {
-  errorMiddleware: (error, req, res, next) => {
+  errorMiddleware: async (error, req, res, next) => {
     if (error instanceof CustomErrorAPI) {
+      await connection.rollback();
       return helpers.response(res, error.statusCode, error.message);
     }
-    console.error(error);
-    return helpers.response(res, 500, `Internal Server Error, ${error.message}`);
+    await connection.rollback();
+    console.log(error);
+    return helpers.response(res, 500, `Internal Server Error,${error.message}`);
   },
 };
