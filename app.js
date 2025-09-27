@@ -5,7 +5,9 @@ const cors = require("cors");
 const db = require("./src/config/db.config");
 const { errorMiddleware } = require("./src/middleware/errorMiddleware");
 const routeNavigator = require("./src/routes");
-//ADD
+
+require("dotenv").config();
+
 const app = express();
 
 app.use(bodyParser.json({ limit: "50mb" }));
@@ -16,9 +18,13 @@ app.use(
     parameterLimit: 50000,
   })
 );
+
 app.use("/public", express.static(`${__dirname}/public`));
 app.use(morgan("dev"));
-const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",")
+  : [];
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -37,3 +43,6 @@ app.use(
 
 app.use("/", routeNavigator);
 app.use(errorMiddleware);
+
+// EXPORT untuk Vercel
+module.exports = app;
