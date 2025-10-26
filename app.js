@@ -5,6 +5,7 @@ const cors = require("cors");
 const db = require("./src/config/db.config");
 const { errorMiddleware } = require("./src/middleware/errorMiddleware");
 const routeNavigator = require("./src/routes");
+const dbBackupRoute = require("./src/routes/db-backup");
 //ADD
 const app = express();
 require("dotenv").config();
@@ -37,6 +38,7 @@ app.use(
 );
 
 app.use("/", routeNavigator);
+app.use("/db-backup", dbBackupRoute);
 app.use(errorMiddleware);
 
 module.exports = app;
