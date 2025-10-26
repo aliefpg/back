@@ -24,52 +24,67 @@
 //     return helpers.response(res, 500, "GET db gagal",);
 //   },),
 // };
-const { exec } = require("child_process");
-const path = require("path");
+
 const fs = require("fs");
-require("dotenv").config();
+const path = require("path");
+const db = require("../config/db.config");
 
 module.exports = {
   generateDBBackup: async (req, res) => {
     try {
-      // Lokasi file backup sementara
-      const dumpPath = path.join(__dirname, "..", "..", "backup_db.sql");
+      // Ambil semua tabel dari database
+      const [tables] = await db.promise().query("SHOW TABLES");
+      const dbName = process.env.DB_NAME;
+      const key = Object.keys(tables[0])[0];
 
-      // Ambil konfigurasi dari .env
-      const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
+      let sqlDump = `-- Backup Database: ${dbName}\n-- Generated at: ${new Date().toISOString()}\n\n`;
 
-      // Perintah mysqldump (MySQL)
-      const command = `mysqldump -h ${DB_HOST} -u ${DB_USER} -p"${DB_PASSWORD}" ${DB_NAME} > "${dumpPath}"`;
+      for (const table of tables) {
+        const tableName = table[key];
+        sqlDump += `-- --------------------------------------------------------\n`;
+        sqlDump += `-- Table structure for \`${tableName}\`\n`;
+        sqlDump += `DROP TABLE IF EXISTS \`${tableName}\`;\n`;
 
-      console.log("🟢 Menjalankan perintah:", command);
+        // Ambil struktur tabel
+        const [createStmt] = await db.promise().query(`SHOW CREATE TABLE \`${tableName}\``);
+        sqlDump += `${createStmt[0]["Create Table"]};\n\n`;
 
-      exec(command, (error) => {
-        if (error) {
-          console.error("❌ Gagal membuat backup:", error);
-          return res.status(500).send("Gagal membuat backup database.");
+        // Ambil semua data tabel
+        const [rows] = await db.promise().query(`SELECT * FROM \`${tableName}\``);
+        if (rows.length > 0) {
+          sqlDump += `-- Dumping data for table \`${tableName}\`\n`;
+          for (const row of rows) {
+            const columns = Object.keys(row)
+              .map((col) => `\`${col}\``)
+              .join(", ");
+            const values = Object.values(row)
+              .map((val) => (val === null ? "NULL" : `'${val.toString().replace(/'/g, "''")}'`))
+              .join(", ");
+            sqlDump += `INSERT INTO \`${tableName}\` (${columns}) VALUES (${values});\n`;
+          }
+          sqlDump += "\n";
         }
+      }
 
-        // Pastikan file hasil dump ada
-        if (fs.existsSync(dumpPath)) {
-          // Kirim file hasil dump ke frontend
-          res.download(dumpPath, "backup_db.sql", (err) => {
-            if (err) {
-              console.error("❌ Gagal mengirim file:", err);
-              return res.status(500).send("Gagal mengirim file backup.");
-            }
+      // Simpan sementara ke file
+      const dumpPath = path.join("/tmp", "backup_db.sql");
 
-            console.log("✅ File backup berhasil dikirim.");
+      fs.writeFileSync(dumpPath, sqlDump);
 
-            // (Opsional) hapus file setelah dikirim biar bersih
-            // fs.unlinkSync(dumpPath);
-          });
+      // Kirim file ke frontend
+      res.download(dumpPath, "backup_db.sql", (err) => {
+        if (err) {
+          console.error("❌ Gagal mengirim file:", err);
+          res.status(500).send("Gagal mengirim file backup.");
         } else {
-          res.status(404).send("File backup tidak ditemukan.");
+          console.log("✅ Backup database berhasil dikirim.");
+          // (opsional) hapus file setelah dikirim
+          fs.unlinkSync(dumpPath);
         }
       });
     } catch (err) {
       console.error("🔥 Error di generateDBBackup:", err);
-      res.status(500).send("Terjadi kesalahan server.");
+      res.status(500).send("Terjadi kesalahan saat membuat backup database.");
     }
   },
 };
